@@ -1,9 +1,9 @@
 # Anime-Face-Detector
 A Faster-RCNN based anime face detector.
 
-This detector is trained on 6000 training samples and 641 testing samples, randomly selected from the dataset which is crawled from top 100 [pixiv daily ranking](https://www.pixiv.net/ranking.php?mode=daily).  
+This detector is trained on 6000 training samples and 641 testing samples, randomly selected from the dataset which is crawled from top 100 [pixiv daily ranking](https://www.pixiv.net/ranking.php?mode=daily).
 
-Thanks to [OpenCV based Anime face detector](https://github.com/nagadomi/lbpcascade_animeface) written by nagadomi, which helps labelling the data. 
+Thanks to [OpenCV based Anime face detector](https://github.com/nagadomi/lbpcascade_animeface) written by nagadomi, which helps labelling the data.
 
 The original implementation of Faster-RCNN using Tensorflow can be found [here](https://github.com/endernewton/tf-faster-rcnn)
 
@@ -19,24 +19,28 @@ The original implementation of Faster-RCNN using Tensorflow can be found [here](
     ```bash
     git clone https://github.com/qhgz2013/anime-face-detector.git
     ```
-2. Download the pre-trained model  
-    Google Drive: [here](https://drive.google.com/open?id=1WjBgfOUqp4sdRd9BHs4TkdH2EcBtV5ri)    
-    Baidu Netdisk: [here](https://pan.baidu.com/s/1bvpCp1sbD7t9qnta8IhpmA)  
-3. Unzip the model file into `model` directory
-4. Build the CPU NMS model (skip this step if use PY_NMS with argument: `-nms-type PY_NMS`)
+1. Download the pre-trained model
+    Google Drive: [here](https://drive.google.com/open?id=1WjBgfOUqp4sdRd9BHs4TkdH2EcBtV5ri)
+    Baidu Netdisk: [here](https://pan.baidu.com/s/1bvpCp1sbD7t9qnta8IhpmA)
+1. Unzip the model file into `model` directory
+1. Install python & pipenv
+   ```bash
+   pyenv install
+   pipenv install
+   ```
+1. Build the CPU NMS model (skip this step if use PY_NMS with argument: `-nms-type PY_NMS`)
     ```bash
-    make clean
-    make
+    pipenv run setup
     ```
    If using Windows Power Shell, type `cmd /C make.bat` to run build script.
-5. Run the demo as you want
+1. Run the demo as you want
     - Visualize the result (without output path):
         ```bash
-        python main.py -i /path/to/image.jpg
+        pipenv run main -i /path/to/image.jpg
         ```
     - Save results to a json file
         ```bash
-        python main.py -i /path/to/image.jpg -o /path/to/output.json
+        pipenv run main -i /path/to/image.jpg -o /path/to/output.json
         ```
         Format: `{"image_path": [{"score": predicted_probability, "bbox": [min_x, min_y, max_x, max_y]}, ...], ...}`
         Sample output file:
@@ -45,19 +49,19 @@ The original implementation of Faster-RCNN using Tensorflow can be found [here](
         ```
     - Detecting a whole directory with recursion
         ```bash
-        python main.py -i /path/to/dir -o /path/to/output.json
+        pipenv run main -i /path/to/dir -o /path/to/output.json
         ```
     - Customize threshold
         ```bash
-        python main.py -i /path/to/image.jpg -nms 0.3 -conf 0.8
+        pipenv run main -i /path/to/image.jpg -nms 0.3 -conf 0.8
         ```
     - Customize model path
         ```bash
-        python main.py -i /path/to/image.jpg -model /path/to/model.ckpt
+        pipenv run main -i /path/to/image.jpg -model /path/to/model.ckpt
         ```
     - Customize nms type (supports CPU_NMS and PY_NMS, not supports GPU_NMS because of the complicated build process for Windows platform)
         ```bash
-        python main.py -i /path/to/image.jpg -nms-type PY_NMS
+        pipenv run main -i /path/to/image.jpg -nms-type PY_NMS
         ```
 
 ## Results
@@ -85,5 +89,5 @@ We've uploaded the dataset to Google drive [here](https://drive.google.com/open?
 
 ## Citation and declaration
 
-Feel free to cite this repo and dataset.  
+Feel free to cite this repo and dataset.
 This work is not related to my research team and lab, just my personal interest.
