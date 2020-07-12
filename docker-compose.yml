@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    image: ponkotuy/anime-face-detector:0.1.0
+    volumes:
+      - /docker/anime-face-detector/images:/images:ro
+      - /docker/anime-face-detector/.bash_history:/root/.bash_history
+      - /docker/anime-face-detector/.bashrc:/root/.bashrc

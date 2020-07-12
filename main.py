@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import numpy as np
 import cv2
 from faster_rcnn_wrapper import FasterRCNNSlim
@@ -80,10 +82,11 @@ def fmt_time(dtime):
                                       int(dtime * 1000) % 1000)
 
 
-def main():
+def gen_parser():
     parser = argparse.ArgumentParser(description='Anime face detector demo')
     parser.add_argument('-i', help='The input path of an image or directory', required=True, dest='input', type=str)
     parser.add_argument('-o', help='The output json path of the detection result', dest='output')
+    parser.add_argument('-s', help='Output json to stdout', dest='stdout', action='count')
     parser.add_argument('-nms', help='Change the threshold for non maximum suppression',
                         dest='nms_thresh', default=0.3, type=float)
     parser.add_argument('-conf', help='Change the threshold for class regression', dest='conf_thresh',
@@ -92,7 +95,11 @@ def main():
                         default='model/res101_faster_rcnn_iter_60000.ckpt')
     parser.add_argument('-nms-type', help='Type of nms', choices=['PY_NMS', 'CPU_NMS', 'GPU_NMS'], dest='nms_type',
                         default='CPU_NMS')
+    return parser
 
+
+def main():
+    parser = gen_parser()
     args = parser.parse_args()
 
     assert os.path.exists(args.input), 'The input path does not exists'
@@ -156,12 +163,16 @@ def main():
                 # saving the temporary result
                 with open(args.output, 'w') as f:
                     json.dump(result, f)
+        elif args.stdout:
+            print(json.dumps(result))
         else:
             cv2.imshow(file, img)
 
     if args.output:
         with open(args.output, 'w') as f:
             json.dump(result, f)
+    elif args.stdout:
+        pass
     else:
         cv2.waitKey()
 

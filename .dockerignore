@@ -1,0 +1,7 @@
+*.json
+Makefile
+make.bat
+Pipfile*
+docker-compose.yml
+Dockerfile
+*~
