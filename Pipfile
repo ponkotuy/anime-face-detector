@@ -8,6 +8,7 @@ opencv-python = "*"
 tensorflow = "<2"
 nms = "*"
 cython = "*"
+flask = "*"
 
 [dev-packages]
 
@@ -16,4 +17,5 @@ python_version = "3.7"
 
 [scripts]
 main = "python main.py"
+server = "python server.py"
 setup = "python setup.py build_ext --inplace"
