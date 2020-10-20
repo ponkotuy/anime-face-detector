@@ -18,7 +18,8 @@ class Searcher:
     CLASS_THRESHOLD = 0.8
     DEFAULT_NMS_TYPE = NMSType.CPU_NMS
 
-    def __init__(self):
+    def __init__(self, base_path):
+        self.base_path = base_path
         self.nms = NMSWrapper(self.DEFAULT_NMS_TYPE)
         self.net = FasterRCNNSlim()
         cfg = tf.ConfigProto()
@@ -27,9 +28,9 @@ class Searcher:
         saver.restore(self.sess, self.DEFAULT_MODEL)
 
     def search_files(self, files):
-        result = {}
+        result = []
         for idx, file in enumerate(files):
-            img = cv2.imread(file)
+            img = cv2.imread(self.base_path + file)
             scores, boxes = detect(self.sess, self.net, img)
             boxes = boxes[:, 4:8]
             scores = scores[:, 1]
@@ -40,23 +41,20 @@ class Searcher:
             scores = scores[inds]
             boxes = boxes[inds, :]
 
-            result[file] = []
+            faces = []
             for i in range(scores.shape[0]):
                 x1, y1, x2, y2 = boxes[i, :].tolist()
-                new_result = {'score': float(scores[i]),
-                              'bbox': [x1, y1, x2, y2]}
-                result[file].append(new_result)
-
+                faces.append({'score': float(scores[i]), 'bbox': [x1, y1, x2, y2]})
+            result.append({'path': '/' + file, 'faces': faces})
         return result
 
 
-searcher = Searcher()
-BASE_PATH = os.environ['IMAGE_BASE_PATH']
+searcher = Searcher(os.environ['IMAGE_BASE_PATH'])
 
 
 @app.route('/<path:name>')
 def search(name=None):
-    return jsonify(searcher.search_files([BASE_PATH + name]))
+    return jsonify(searcher.search_files([name]))
 
 
 if __name__ == '__main__':
