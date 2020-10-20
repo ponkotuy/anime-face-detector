@@ -11,4 +11,4 @@ services:
       - /docker/anime-face-detector/.bashrc:/root/.bashrc
     command: ./server.py
     environment:
-      - IMAGE_BASE_PATH=/docker/anime-face-detector/images
+      - IMAGE_BASE_PATH=/images/

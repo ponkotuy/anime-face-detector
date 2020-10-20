@@ -7,8 +7,6 @@ import tensorflow as tf
 from nms_wrapper import NMSType, NMSWrapper
 from flask import Flask, jsonify
 import os
-import sys
-import json
 from main import detect
 
 app = Flask(__name__)
