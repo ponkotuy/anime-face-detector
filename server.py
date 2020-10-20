@@ -6,6 +6,7 @@ from faster_rcnn_wrapper import FasterRCNNSlim
 import tensorflow as tf
 from nms_wrapper import NMSType, NMSWrapper
 from flask import Flask, jsonify
+import os
 import sys
 import json
 from main import detect
@@ -30,7 +31,6 @@ class Searcher:
     def search_files(self, files):
         result = {}
         for idx, file in enumerate(files):
-            print(file)
             img = cv2.imread(file)
             scores, boxes = detect(self.sess, self.net, img)
             boxes = boxes[:, 4:8]
@@ -53,7 +53,7 @@ class Searcher:
 
 
 searcher = Searcher()
-BASE_PATH = '/home/yosuke/toruneko/'
+BASE_PATH = os.environ['IMAGE_BASE_PATH']
 
 
 @app.route('/<path:name>')
@@ -61,13 +61,5 @@ def search(name=None):
     return jsonify(searcher.search_files([BASE_PATH + name]))
 
 
-def main():
-    files = sys.argv[1:]
-    print(json.dumps(searcher.search_files(files)))
-    print(json.dumps(searcher.search_files(
-        ["/home/yosuke/toruneko/"]
-    )))
-
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, host='0.0.0.0')
